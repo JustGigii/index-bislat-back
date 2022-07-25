@@ -12,9 +12,11 @@ namespace Index_Bislat_Back.Repository
         {
             this._context = context;
         }
-        public bool AddCourse(Coursetable course)
+        public bool AddCourse(Coursetable course,string bases)
         {
-            throw new NotImplementedException();
+            _context.Add(course);
+
+            return Save();
         }
 
         public bool DeleteCourse(int CourseNumber)
@@ -43,6 +45,11 @@ namespace Index_Bislat_Back.Repository
         public bool UpdateCourse(Coursetable courset)
         {
             throw new NotImplementedException();
+        }
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

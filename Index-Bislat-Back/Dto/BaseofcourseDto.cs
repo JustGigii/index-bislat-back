@@ -1,9 +1,11 @@
 ﻿
 
+using index_bislatContext;
+
 namespace Index_Bislat_Back.Dto
 {
     public class BaseofcourseDto
     {
-        public virtual AifbaseDto Base { get; set; }
+        public string Base { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Index_Bislat_Back.Dto
+﻿using index_bislatContext;
+
+namespace Index_Bislat_Back.Dto
 {
     public class CourseDetailsDio
     {
@@ -12,6 +14,6 @@
         public string? ImgUrl { get; set; }
         public string? Note { get; set; }
 
-        public virtual ICollection<BaseofcourseDto> Baseofcourses { get; set; }
+        public ICollection<BaseofcourseDto> BaseofcoursesDto { get; set; }
     }
 }

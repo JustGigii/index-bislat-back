@@ -33,7 +33,7 @@ namespace Index_Bislat_Back.Controllers
 
         }
         [HttpGet("{CourseNumber}")]
-        [ProducesResponseType(200, Type = typeof(Coursetable))]
+        [ProducesResponseType(200, Type = typeof(CourseDetailsDio))]
         [ProducesResponseType(400)]
         public IActionResult GetCourseById(string CourseNumber)
         {
@@ -41,7 +41,7 @@ namespace Index_Bislat_Back.Controllers
             {
                 if (!_course.IsExist(CourseNumber))
                     return NotFound();
-                var coures = _mapper.Map<List<CourseDetailsDio>>(_course.GetCourseById(CourseNumber).Result);
+                var coures = _mapper.Map<CourseDetailsDio>(_course.GetCourseById(CourseNumber).Result);
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
                 return Ok(coures);
@@ -51,5 +51,8 @@ namespace Index_Bislat_Back.Controllers
                        return BadRequest($"Error Occurred: {ex}");
             }
         }
+        
+
+
     }
 }
