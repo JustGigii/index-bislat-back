@@ -14,7 +14,7 @@ namespace Index_Bislat_Back.Helper
             CreateMap<Coursetable, CoursesDto>();
             CreateMap<CoursesDto, Coursetable>();
 
-            CreateMap<Coursetable, CourseDetailsDto>().ForMember(dest => dest.Baseofcourses, act => act.MapFrom(src => src.stringbase()));
+            CreateMap<Coursetable, CourseDetailsDto>().ForMember(dest => dest.CourseBases, act => act.MapFrom(src => src.stringbase()));
             CreateMap<CourseDetailsDto, Coursetable>();
 
             CreateMap<Baseofcourse, BaseofcourseDto>().ForMember(dest => dest.Base, act => act.MapFrom(src => src));

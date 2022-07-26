@@ -85,7 +85,7 @@ namespace Index_Bislat_Back.Controllers
 
             var courseMap = _mapper.Map<Coursetable>(courseCreate);
             List<string> bases =new List<string>();
-            foreach (var item in courseCreate.Baseofcourses)
+            foreach (var item in courseCreate.CourseBases)
             {
                 bases.Add(item);
             }
