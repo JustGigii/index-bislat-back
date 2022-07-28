@@ -1,6 +1,8 @@
 // dotnet ef dbcontext scaffold Name=DefaultConnection Pomelo.EntityFrameworkCore.MySql --output-dir Models --context-dir Data --namespace index_bislatContext -f --no-onconfiguring
 // https://www.youtube.com/watch?v=pzFY45La2LE
-
+// https://github.com/CuriousDrive/EFCore.AllDatabasesConsidered/tree/main/MySQL/Northwind.MySQL
+// https://github.com/teddysmithdev/pokemon-review-api
+// https://www.youtube.com/watch?v=v7q3pEK1EA0
 using Index_Bislat_Back.Interfaces;
 using Index_Bislat_Back.Repository;
 using index_bislatContext;

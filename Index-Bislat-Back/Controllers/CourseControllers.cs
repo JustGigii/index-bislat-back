@@ -3,21 +3,7 @@ using Index_Bislat_Back.Dto;
 using Index_Bislat_Back.Interfaces;
 using index_bislatContext;
 using Microsoft.AspNetCore.Mvc;
-//{
-//    "category": "מערך מטוסי קרב",
-//  "courseNumber": "0888",
-//  "courseName": "טכנאי דרג א' בז",
-//  "courseTime": "6 שבועות",
-//  "courseDescription": "מומחה בטיפול ותחזוקה שוטפת במטוסים הוצאת וקבלת מטוסים מטיסה וזיהוי תקלות. מבצע בדיקות מקיפות למטוס",
-//  "youTubeUrl": "EQ3gHqLIC5w",
-//  "imgUrl": "",
-//  "note": "דרג א' הינו מקצוע המוגדר תומך לחימה, מקנה הטבות בשחרור",
-//  "baseofcoursesDto": [
-//    {
-//        "base": "בח\"א 8"
-//    }
-//  ]
-//}
+
 namespace Index_Bislat_Back.Controllers
 {
     [Route("Course")]
@@ -25,13 +11,11 @@ namespace Index_Bislat_Back.Controllers
     public class CourseControllers : Controller
     {
         private readonly ICourse _course;
-        private readonly IAifBase _base;
         private readonly IMapper _mapper;
-        public CourseControllers(ICourse Course, IAifBase aifbase, IMapper mapper)
+        public CourseControllers(ICourse Course, IMapper mapper)
         {
             _course = Course;
             _mapper = mapper;
-            _base = aifbase;
         }
 
         [HttpGet]
@@ -63,7 +47,7 @@ namespace Index_Bislat_Back.Controllers
             }
             catch (Exception ex)
             {
-                       return BadRequest($"Error Occurred: {ex}");
+                return BadRequest($"Error Occurred: {ex}");
             }
         }
         [HttpPost]
@@ -84,12 +68,8 @@ namespace Index_Bislat_Back.Controllers
                 return BadRequest(ModelState);
 
             var courseMap = _mapper.Map<Coursetable>(courseCreate);
-            List<string> bases =new List<string>();
-            foreach (var item in courseCreate.CourseBases)
-            {
-                bases.Add(item);
-            }
-            if (!_course.AddCourse(courseMap, bases,_base))
+            List<string> bases = new List<string>(courseCreate.CourseBases);
+            if (!_course.AddCourse(courseMap, bases))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);
@@ -97,8 +77,57 @@ namespace Index_Bislat_Back.Controllers
 
             return Ok("Successfully created");
         }
+        [HttpDelete("{CourseNumber}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DelteCourse(string CourseNumber)
+        {
+            if(!_course.IsExist(CourseNumber))
+            {
+                ModelState.AddModelError("", "course not exists");
+                return StatusCode(422, ModelState);
+            }
+            var course = _course.GetCourseById(CourseNumber).Result;
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            if(!_course.DeleteCourse(course))
+            {
+                ModelState.AddModelError("", "Something went wrong while delete");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("succses to delete");
+        }
 
+        [HttpPut("UpdateCourse")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateCategory([FromBody] CourseDetailsDto updatedCourse,bool basechange) //pls cheak before you send
+        {
+            if (updatedCourse == null)
+                return BadRequest(ModelState);
 
+            if (!_course.IsExist(updatedCourse.CourseNumber))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var courseMap = _mapper.Map<Coursetable>(updatedCourse);
+            List<string> bases = null;
+            if(basechange)
+            {
+              bases = new List<string>(updatedCourse.CourseBases);
+            }
+            if (!_course.UpdateCourse(courseMap,bases))
+            {
+                ModelState.AddModelError("", "Something went wrong updating category");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("succses to Update");
+        }
 
 
     }

@@ -14,7 +14,7 @@
         },
         {
             "category": "מערך מטוסי תובלה",
-            "CourseNumber": "0827",
+            "CourseNumber": "0827-ראם",
             "CourseName": "טכנאי דרג א' תובלה כבדה ראם",
             "CourseTime": "12 שבועות",
             "CourseBases": ["בח''א 28"],
@@ -25,7 +25,7 @@
         },
         {
             "category": "מערך מטוסי תובלה",
-            "CourseNumber": "0827",
+            "CourseNumber": "שמשון-0827",
             "CourseName": "טכנאי דרג א' תובלה כבדה שמשון",
             "CourseTime": "12 שבועות",
             "CourseBases": ["בח''א 28"],
@@ -36,7 +36,7 @@
         },
         {
             "category": "מערך מטוסי תובלה",
-            "CourseNumber": "0827",
+            "CourseNumber": "0827-קרנף",
             "CourseName": "טכנאי דרג א' תובלה כבדה קרנף",
             "CourseTime": "12 שבועות",
             "CourseBases": ["בח''א 28"],
@@ -333,7 +333,7 @@
         },
         {
             "category": "מערך האוויוניקה",
-            "CourseNumber": "1319",
+            "CourseNumber": "עטלף-1319",
             "CourseName": "טכנאי אוויוניקה עטלף",
             "CourseTime": "10.5 שבועות",
             "CourseBases": ["כנף 1", "כנף 25"],
@@ -343,7 +343,7 @@
         },
         {
             "category": "מערך האוויוניקה",
-            "CourseNumber": "1319",
+            "CourseNumber": "1319-פתן",
             "CourseName": "טכנאי אוויוניקה פתן ",
             "CourseTime": "10.5 שבועות",
             "CourseBases": ["כנף 1", "כנף 25"],
@@ -353,7 +353,7 @@
         },
         {
             "category": "מערך האוויוניקה",
-            "CourseNumber": "1319",
+            "CourseNumber": "1319-שרף",
             "CourseName": "טכנאי אוויוניקה שרף",
             "CourseTime": "10.5 שבועות",
             "CourseBases": ["כנף 1", "כנף 25"],
@@ -661,7 +661,7 @@
         },
         {
             "category": "מערך הכטמ''מ",
-            "CourseNumber": "828",
+            "CourseNumber": "828-רוכב",
             "CourseName": "טכנאי דרג א' רוכב",
             "CourseTime": "7 שבועות",
             "CourseBases": ["בח''א 30" ,"בח''א 8" ,"כנף 1"],
@@ -672,7 +672,7 @@
         },
         {
             "category": "מערך הכטמ''מ",
-            "CourseNumber": "828",
+            "CourseNumber": "828-איתן",
             "CourseName": "טכנאי דרג א' איתן",
             "CourseTime": "9 שבועות",
             "CourseBases": ["בח''א 30" ,"בח''א 8" ,"כנף 1"],
@@ -683,7 +683,7 @@
         },
         {
             "category": "מערך הכטמ''מ",
-            "CourseNumber": "828",
+            "CourseNumber": "828-כוכב",
             "CourseName": "טכנאי דרג א' כוכב",
             "CourseTime": "7 שבועות",
             "CourseBases": ["בח''א 30" ,"בח''א 8" ,"כנף 1"],
@@ -694,7 +694,7 @@
         },
         {
             "category": "מערך הכטמ''מ",
-            "CourseNumber": "828",
+            "CourseNumber": "828-שובל",
             "CourseName": "טכנאי דרג א' שובל",
             "CourseTime": "9 שבועות",
             "CourseBases": ["בח''א 30" ,"בח''א 8" ,"כנף 1"],
@@ -705,7 +705,7 @@
         },
         {
             "category": "מערך הכטמ''מ",
-            "CourseNumber": "828",
+            "CourseNumber": "828-זיק",
             "CourseName": "טכנאי דרג א' זיק",
             "CourseTime": "7 שבועות",
             "CourseBases": ["בח''א 30" ,"בח''א 8" ,"כנף 1"],
@@ -716,7 +716,7 @@
         },
         {
             "category": "מערך הכטמ''מ",
-            "CourseNumber": "838",
+            "CourseNumber": "838-קרונות כטמ''מ",
             "CourseName": "טכנאי דרג א' קרונות כטמ''מ",
             "CourseTime": "8 שבועות",
             "CourseBases": ["בח''א 30" ,"בח''א 8" ,"כנף 1"],

@@ -28,11 +28,6 @@ namespace Index_Bislat_Back.Repository
             return Save();
         }
 
-        public bool UpDateBase(Aifbase aifbase)
-        {
-            _context.Update(aifbase);
-            return Save();
-        }
         public bool Save()
         {
             var saved = _context.SaveChanges();
@@ -54,6 +49,11 @@ namespace Index_Bislat_Back.Repository
         {
             var afbase = _context.Aifbases.Where(p => p.BaseName.Contains(aifbase)).FirstOrDefault();
             return afbase.Id;
+        }
+
+        public Aifbase GetAifbaseDetails(string aifbase)
+        {
+            return _context.Aifbases.Where(p => p.BaseName.Contains(aifbase)).FirstOrDefault();
         }
     }
 }
