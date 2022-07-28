@@ -30,7 +30,7 @@ namespace Index_Bislat_Back.Controllers
 
             return Ok(Bases);
         }
-       
+
         [HttpPost("AddBase")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
@@ -56,11 +56,28 @@ namespace Index_Bislat_Back.Controllers
 
             if (!_aifBaseRepository.AddBase(BaseMap))
             {
-                ModelState.AddModelError("", "Something went wrong while savin");
+                ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);
             }
 
             return Ok("Successfully created");
+        }
+        [HttpDelete("{baseName}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult RemoveBase(string baseName )
+        {
+            if (!_aifBaseRepository.Isexsit(baseName))
+                return NotFound();
+            var iafbase = _aifBaseRepository.GetAifbaseDetails(baseName);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            if (!_aifBaseRepository.RemoveBase(iafbase))
+            {
+                ModelState.AddModelError("", "Something went wrong deleting Base");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("succses to delete");
         }
     }
 }

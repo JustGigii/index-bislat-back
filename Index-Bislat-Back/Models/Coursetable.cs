@@ -21,5 +21,12 @@ namespace index_bislatContext
         public string? Note { get; set; }
 
         public virtual ICollection<Baseofcourse> Baseofcourses { get; set; }
+        public ICollection<string> stringbase()
+        {
+            List<string> bases = new List<string>();
+            Baseofcourses.ToList().ForEach(item => bases.Add(item.Base.BaseName));
+            return bases;
+        }
+         
     }
 }

@@ -14,15 +14,11 @@ namespace Index_Bislat_Back.Helper
             CreateMap<Coursetable, CoursesDto>();
             CreateMap<CoursesDto, Coursetable>();
 
+            CreateMap<Coursetable, CourseDetailsDto>().ForMember(dest => dest.CourseBases, act => act.MapFrom(src => src.stringbase()));
+            CreateMap<CourseDetailsDto, Coursetable>();
+
+            CreateMap<Baseofcourse, BaseofcourseDto>().ForMember(dest => dest.Base, act => act.MapFrom(src => src));
             CreateMap<BaseofcourseDto, Baseofcourse>();
-            CreateMap<Baseofcourse, BaseofcourseDto>();
-
-            CreateMap<BaseofcourseDto, Baseofcourse>();
-            CreateMap<Baseofcourse, BaseofcourseDto>();
-
-            CreateMap<CourseDetailsDio, Coursetable>();
-            CreateMap<Coursetable,CourseDetailsDio>();
-
         }
     }
 }
