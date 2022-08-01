@@ -27,6 +27,5 @@ namespace index_bislatContext
             Baseofcourses.ToList().ForEach(item => bases.Add(item.Base.BaseName));
             return bases;
         }
-         
     }
 }

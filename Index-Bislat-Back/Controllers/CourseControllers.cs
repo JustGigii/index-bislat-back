@@ -103,7 +103,7 @@ namespace Index_Bislat_Back.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateCategory([FromBody] CourseDetailsDto updatedCourse,bool basechange) //pls cheak before you send
+        public IActionResult UpdateCategory([FromBody] CourseDetailsDto updatedCourse, bool basechange) //pls cheak before you send
         {
             if (updatedCourse == null)
                 return BadRequest(ModelState);
@@ -122,7 +122,7 @@ namespace Index_Bislat_Back.Controllers
             }
             if (!_course.UpdateCourse(courseMap,bases))
             {
-                ModelState.AddModelError("", "Something went wrong updating category");
+                ModelState.AddModelError("", "Something went wrong updating course");
                 return StatusCode(500, ModelState);
             }
 

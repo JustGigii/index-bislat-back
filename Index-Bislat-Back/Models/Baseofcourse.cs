@@ -11,6 +11,5 @@ namespace index_bislatContext
 
         public virtual Aifbase? Base { get; set; }
         public virtual Coursetable? Course { get; set; }
-
     }
 }

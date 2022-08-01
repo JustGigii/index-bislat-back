@@ -11,7 +11,8 @@ namespace index_bislatContext
         {
         }
 
-        public indexbislatContext(DbContextOptions<indexbislatContext> options) : base(options)
+        public indexbislatContext(DbContextOptions<indexbislatContext> options)
+            : base(options)
         {
         }
 

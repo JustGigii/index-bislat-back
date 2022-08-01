@@ -11,6 +11,6 @@ namespace Index_Bislat_Back.Interfaces
         int GetCourseIdByNumber(string CourseNumber);
         bool DeleteCourse(Coursetable CourseNumber);
         bool UpdateCourse(Coursetable course, List<string> bases);
-        public bool Save();
+        public Task<bool> Save();
     }
 }

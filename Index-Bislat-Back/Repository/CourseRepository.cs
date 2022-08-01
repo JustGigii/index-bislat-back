@@ -2,7 +2,19 @@
 using index_bislatContext;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
-
+//{
+//    "category": "משהו",
+//  "courseNumber": "69420",
+//  "courseName": "בדיקה",
+//  "courseTime": "בידקה",
+//  "courseBases": [
+//    "בח''א 8"
+//  ],
+//  "courseDescription": "בדיקה",
+//  "youTubeURL": "בדיקה",
+//  "imgURL": "בדיקה",
+//  "note": "בדיקה"
+//}
 namespace Index_Bislat_Back.Repository
 {
     public class CourseRepository : ICourse
@@ -19,7 +31,7 @@ namespace Index_Bislat_Back.Repository
             try
             {
                 _context.Coursetables.Add(course);
-                if (!Save()) return false;
+                if (!Save().Result) return false;
                 AddBaseToCourse(course, bases);
                 return true;
             }
@@ -52,7 +64,7 @@ namespace Index_Bislat_Back.Repository
         {
             _context.Database.ExecuteSqlRaw("delete from baseofcourse where courseId = {0}", CourseNumber.CourseId);
             _context.Coursetables.Remove(CourseNumber);
-            return Save();
+            return Save().Result;
         }
 
         public ICollection<Coursetable> GetAllCourses()
@@ -84,23 +96,16 @@ namespace Index_Bislat_Back.Repository
         {
             try
             {
-                course.Baseofcourses = null;
-                _context.Coursetables.Update(course);
-                if (!Save())
-                    return false;
-                if (bases is object)
-                {
-                    _context.Database.ExecuteSqlRaw("delete from baseofcourse where courseId = {0}", course.CourseId);
-                    AddBaseToCourse(course, bases);
-                }
-                return true;
+                return DeleteCourse(course) && AddCourse(course, bases);
+     
             }
-            catch { return false; }
+            catch(Exception err) { throw err; }
         }
-        public bool Save()
+        public async Task<bool> Save()
         {
-            var saved = _context.SaveChanges();
+             var saved = await _context.SaveChangesAsync();
             return saved > 0 ? true : false;
         }
+      
     }
 }
