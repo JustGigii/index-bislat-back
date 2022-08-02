@@ -4,13 +4,13 @@ namespace Index_Bislat_Back.Interfaces
 {
     public interface IAifBase
     {
-        ICollection<Aifbase> GetAllBase();
-        Aifbase GetAifbaseDetails(string aifbase);
-        bool Isexsit(string aifbase);
-        bool AddBase(Aifbase aifbase);
-        int AddBase(string aifbase);
-        int getidofCourse(string aifbase);
-        bool RemoveBase(Aifbase aifbase);
+        Task<ICollection<Aifbase>> GetAllBase();
+        Task<Aifbase> GetAifbaseDetails(string aifbase);
+        Task<bool> Isexsit(string aifbase);
+        Task<bool> AddBase(Aifbase aifbase);
+       // Task<int> AddBase(string aifbase);
+        Task<int> getidofCourse(string aifbase);
+        Task<bool> RemoveBase(Aifbase aifbase);
 
 
 

@@ -20,9 +20,9 @@ namespace Index_Bislat_Back.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Coursetable>))]
-        public IActionResult GetAllCourses()
+        public async Task<IActionResult> GetAllCourses()
         {
-            var coures = _mapper.Map<List<CoursesDto>>(_course.GetAllCourses());
+            var coures = _mapper.Map<List<CoursesDto>>(await _course.GetAllCourses());
 
             if (!ModelState.IsValid)
             {
@@ -34,11 +34,11 @@ namespace Index_Bislat_Back.Controllers
         [HttpGet("{CourseNumber}")]
         [ProducesResponseType(200, Type = typeof(CourseDetailsDto))]
         [ProducesResponseType(400)]
-        public IActionResult GetCourseById(string CourseNumber)
+        public async Task<IActionResult> GetCourseById(string CourseNumber)
         {
             try
             {
-                if (!_course.IsExist(CourseNumber))
+                if (!await _course.IsExist(CourseNumber))
                     return NotFound();
                 var coures = _mapper.Map<CourseDetailsDto>(_course.GetCourseById(CourseNumber).Result);
                 if (!ModelState.IsValid)
@@ -53,12 +53,12 @@ namespace Index_Bislat_Back.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateCourse([FromBody] CourseDetailsDto courseCreate)
+        public async Task<IActionResult> CreateCourse([FromBody] CourseDetailsDto courseCreate)
         {
             if (courseCreate == null)
                 return BadRequest(ModelState);
 
-            if (_course.IsExist(courseCreate.CourseNumber))
+            if (await _course.IsExist(courseCreate.CourseNumber))
             {
                 ModelState.AddModelError("", "course already exists");
                 return StatusCode(422, ModelState);
@@ -69,7 +69,7 @@ namespace Index_Bislat_Back.Controllers
 
             var courseMap = _mapper.Map<Coursetable>(courseCreate);
             List<string> bases = new List<string>(courseCreate.CourseBases);
-            if (!_course.AddCourse(courseMap, bases))
+            if (! await _course.AddCourse(courseMap, bases))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);
@@ -81,9 +81,9 @@ namespace Index_Bislat_Back.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult DelteCourse(string CourseNumber)
+        public async Task<IActionResult> DelteCourse(string CourseNumber)
         {
-            if(!_course.IsExist(CourseNumber))
+            if(!await _course.IsExist(CourseNumber))
             {
                 ModelState.AddModelError("", "course not exists");
                 return StatusCode(422, ModelState);
@@ -91,7 +91,7 @@ namespace Index_Bislat_Back.Controllers
             var course = _course.GetCourseById(CourseNumber).Result;
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            if(!_course.DeleteCourse(course))
+            if(!await _course.DeleteCourse(course))
             {
                 ModelState.AddModelError("", "Something went wrong while delete");
                 return StatusCode(500, ModelState);
@@ -103,24 +103,20 @@ namespace Index_Bislat_Back.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateCategory([FromBody] CourseDetailsDto updatedCourse, bool basechange) //pls cheak before you send
+        public async Task<IActionResult> UpdateCategory([FromBody] CourseDetailsDto updatedCourse)
         {
             if (updatedCourse == null)
                 return BadRequest(ModelState);
 
-            if (!_course.IsExist(updatedCourse.CourseNumber))
+            if (!await _course.IsExist(updatedCourse.CourseNumber))
                 return NotFound();
 
             if (!ModelState.IsValid)
                 return BadRequest();
 
             var courseMap = _mapper.Map<Coursetable>(updatedCourse);
-            List<string> bases = null;
-            if(basechange)
-            {
-              bases = new List<string>(updatedCourse.CourseBases);
-            }
-            if (!_course.UpdateCourse(courseMap,bases))
+            List<string> bases = new List<string>(updatedCourse.CourseBases);
+            if (!await _course.UpdateCourse(courseMap,bases))
             {
                 ModelState.AddModelError("", "Something went wrong updating course");
                 return StatusCode(500, ModelState);

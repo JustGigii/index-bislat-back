@@ -25,13 +25,13 @@ namespace Index_Bislat_Back.Repository
         {
             this._context = context;
         }
-        public bool AddCourse(Coursetable course, List<string> bases)
+        public async Task<bool> AddCourse(Coursetable course, List<string> bases)
         {
             course.Baseofcourses = null;
             try
             {
                 _context.Coursetables.Add(course);
-                if (!Save().Result) return false;
+                if ( !await Save()) return false;
                 AddBaseToCourse(course, bases);
                 return true;
             }
@@ -39,13 +39,14 @@ namespace Index_Bislat_Back.Repository
 
         }
 
-        private void AddBaseToCourse(Coursetable course, List<string> bases)
+        private async Task AddBaseToCourse(Coursetable course, List<string> bases)
         {
             foreach (var iafBase in bases)
             {
                 var idnum = MakePrameter("@ncourseNumber", System.Data.DbType.String, 45, course.CourseNumber);
                 var baseofcourse = MakePrameter("@base", System.Data.DbType.String, 45, iafBase); 
-                _context.Database.ExecuteSqlRaw("call Add_base_to_course(@ncourseNumber,@base);", idnum, baseofcourse);
+                await _context.Database.ExecuteSqlRawAsync("call Add_base_to_course(@ncourseNumber,@base);", idnum, baseofcourse);
+
             }
         }
 
@@ -60,16 +61,16 @@ namespace Index_Bislat_Back.Repository
             return pram;
         }
 
-        public bool DeleteCourse(Coursetable CourseNumber)
+        public async Task<bool> DeleteCourse(Coursetable CourseNumber)
         {
-            _context.Database.ExecuteSqlRaw("delete from baseofcourse where courseId = {0}", CourseNumber.CourseId);
+            await _context.Database.ExecuteSqlRawAsync("delete from baseofcourse where courseId = {0}", CourseNumber.CourseId);
             _context.Coursetables.Remove(CourseNumber);
-            return Save().Result;
+            return await Save();
         }
 
-        public ICollection<Coursetable> GetAllCourses()
+        public async Task<ICollection<Coursetable>> GetAllCourses()
         {
-            return _context.Coursetables.ToList();
+            return await _context.Coursetables.ToListAsync();
         }
 
         public async Task<Coursetable> GetCourseById(string CourseNumber)
@@ -79,31 +80,35 @@ namespace Index_Bislat_Back.Repository
                  .Where(p => p.CourseNumber.Contains(CourseNumber))
                  .FirstOrDefaultAsync();
         }
-        public int GetCourseIdByNumber(string CourseNumber)
+        public async Task<int> GetCourseIdByNumber(string CourseNumber)
         {
-            var course = _context.Coursetables
+            var course = await _context.Coursetables
                  .Where(p => p.CourseNumber.Contains(CourseNumber))
-                 .FirstOrDefault();
-            return course.CourseId;
+                 .FirstOrDefaultAsync();
+            return  course.CourseId;
         }
-
-        public bool IsExist(string CourseNumber)
+        
+        public async Task<bool> IsExist(string CourseNumber)
         {
-            return _context.Coursetables.Any(p => p.CourseNumber.Contains(CourseNumber));
+            return await _context.Coursetables.AnyAsync(p => p.CourseNumber.Contains(CourseNumber));
         }
 
-        public bool UpdateCourse(Coursetable course, List<string> bases)
+        public  async Task<bool> UpdateCourse(Coursetable course, List<string> bases)
         {
             try
             {
-                return DeleteCourse(course) && AddCourse(course, bases);
-     
+
+                var courseold =  _context.Coursetables
+                    .Where(p => p.CourseNumber.Contains(course.CourseNumber))
+                    .FirstOrDefault();;
+                return await DeleteCourse(courseold) && await AddCourse(course, bases);
+
             }
-            catch(Exception err) { throw err; }
+            catch { return false; }
         }
         public async Task<bool> Save()
         {
-             var saved = await _context.SaveChangesAsync();
+            var saved = await _context.SaveChangesAsync();
             return saved > 0 ? true : false;
         }
       

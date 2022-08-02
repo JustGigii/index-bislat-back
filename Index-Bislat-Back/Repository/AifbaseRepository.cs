@@ -11,49 +11,49 @@ namespace Index_Bislat_Back.Repository
         {
             _context = context;
         }
-        public bool AddBase(Aifbase aifbase)
+        public async Task<bool> AddBase(Aifbase aifbase)
         {
             _context.Add(aifbase);
-            return Save();
+            return await Save();
         }
 
-        public ICollection<Aifbase> GetAllBase()
+        public async Task<ICollection<Aifbase>> GetAllBase()
         {
-            return _context.Aifbases.ToList();
+            return await _context.Aifbases.ToListAsync();
         }
 
-        public bool RemoveBase(Aifbase aifbase)
+        public async Task<bool> RemoveBase(Aifbase aifbase)
         {
             _context.Remove(aifbase);
-            return Save();
+            return await Save();
         }
 
-        public bool Save()
+        public async Task<bool> Save()
         {
-            var saved = _context.SaveChanges();
+            var saved =await _context.SaveChangesAsync();
             return saved > 0 ? true : false;
         }
 
-        public bool Isexsit(string aifbase)
+        public async Task<bool> Isexsit(string aifbase)
         {
-            return _context.Aifbases.Any(p => p.BaseName.Contains(aifbase));
+            return await _context.Aifbases.AnyAsync(p => p.BaseName.Contains(aifbase));
         }
 
-        public int AddBase(string aifbases)
-        {
-            var aifbase = _context.Aifbases.FromSqlRaw("insert into AIFBase (baseName) value ({0})", aifbases).FirstOrDefault();
-            return aifbase.Id;
-        }
+        //public int AddBase(string aifbases)
+        //{
+        //    var aifbase = _context.Aifbases.FromSqlRaw("insert into AIFBase (baseName) value ({0})", aifbases).FirstOrDefault();
+        //    return aifbase.Id;
+        //}
 
-        public int getidofCourse(string aifbase)
+        public async Task<int> getidofCourse(string aifbase)
         {
-            var afbase = _context.Aifbases.Where(p => p.BaseName.Contains(aifbase)).FirstOrDefault();
+            var afbase = await _context.Aifbases.Where(p => p.BaseName.Contains(aifbase)).FirstOrDefaultAsync();
             return afbase.Id;
         }
 
-        public Aifbase GetAifbaseDetails(string aifbase)
+        public async Task<Aifbase> GetAifbaseDetails(string aifbase)
         {
-            return _context.Aifbases.Where(p => p.BaseName.Contains(aifbase)).FirstOrDefault();
+            return await _context.Aifbases.Where(p => p.BaseName.Contains(aifbase)).FirstOrDefaultAsync();
         }
     }
 }
