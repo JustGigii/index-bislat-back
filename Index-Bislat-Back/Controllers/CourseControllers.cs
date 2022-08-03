@@ -40,7 +40,7 @@ namespace Index_Bislat_Back.Controllers
             {
                 if (!await _course.IsExist(CourseNumber))
                     return NotFound();
-                var coures = _mapper.Map<CourseDetailsDto>(_course.GetCourseById(CourseNumber).Result);
+                var coures = _mapper.Map<CourseDetailsDto>(await _course.GetCourseById(CourseNumber));
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
                 return Ok(coures);
@@ -88,7 +88,7 @@ namespace Index_Bislat_Back.Controllers
                 ModelState.AddModelError("", "course not exists");
                 return StatusCode(422, ModelState);
             }
-            var course = _course.GetCourseById(CourseNumber).Result;
+            var course =await _course.GetCourseById(CourseNumber);
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             if(!await _course.DeleteCourse(course))

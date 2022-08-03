@@ -20,6 +20,8 @@ namespace index_bislatContext
         public virtual DbSet<Baseofcourse> Baseofcourses { get; set; } = null!;
         public virtual DbSet<Choisetable> Choisetables { get; set; } = null!;
         public virtual DbSet<Coursetable> Coursetables { get; set; } = null!;
+        public virtual DbSet<Couseofsort> Couseofsorts { get; set; } = null!;
+        public virtual DbSet<SortCycle> SortCycles { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -65,6 +67,7 @@ namespace index_bislatContext
                 entity.HasOne(d => d.Base)
                     .WithMany(p => p.Baseofcourses)
                     .HasForeignKey(d => d.Baseid)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("BASEKEY");
 
                 entity.HasOne(d => d.Course)
@@ -80,6 +83,11 @@ namespace index_bislatContext
 
                 entity.ToTable("choisetable");
 
+                entity.HasCharSet("utf8mb4")
+                    .UseCollation("utf8mb4_general_ci");
+
+                entity.HasIndex(e => e.Sortid, "Sort_key_idx");
+
                 entity.Property(e => e.Callid)
                     .HasColumnType("int(11)")
                     .HasColumnName("CALLID");
@@ -92,12 +100,16 @@ namespace index_bislatContext
                 entity.Property(e => e.FullName)
                     .HasMaxLength(45)
                     .HasColumnName("fullName")
-                    .HasComment("שם מלא של החייל");
+                    .HasComment("שם מלא של החייל")
+                    .UseCollation("latin1_swedish_ci")
+                    .HasCharSet("latin1");
 
                 entity.Property(e => e.Id)
                     .HasMaxLength(45)
                     .HasColumnName("ID")
-                    .HasComment("ת.ז");
+                    .HasComment("ת.ז")
+                    .UseCollation("latin1_swedish_ci")
+                    .HasCharSet("latin1");
 
                 entity.Property(e => e.Second)
                     .HasColumnType("int(11)")
@@ -109,6 +121,10 @@ namespace index_bislatContext
                     .HasColumnName("sortFrame")
                     .HasComment("מסגרת מיון");
 
+                entity.Property(e => e.Sortid)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("SORTID");
+
                 entity.Property(e => e.Third)
                     .HasColumnType("int(11)")
                     .HasColumnName("third")
@@ -117,7 +133,14 @@ namespace index_bislatContext
                 entity.Property(e => e.Title)
                     .HasMaxLength(45)
                     .HasColumnName("title")
-                    .HasComment("מחזור מיון");
+                    .HasComment("מחזור מיון")
+                    .UseCollation("latin1_swedish_ci")
+                    .HasCharSet("latin1");
+
+                entity.HasOne(d => d.Sort)
+                    .WithMany(p => p.Choisetables)
+                    .HasForeignKey(d => d.Sortid)
+                    .HasConstraintName("Sort_key");
             });
 
             modelBuilder.Entity<Coursetable>(entity =>
@@ -157,6 +180,65 @@ namespace index_bislatContext
                 entity.Property(e => e.YouTubeUrl)
                     .HasMaxLength(45)
                     .HasColumnName("YouTubeURL");
+            });
+
+            modelBuilder.Entity<Couseofsort>(entity =>
+            {
+                entity.ToTable("couseofsort");
+
+                entity.HasCharSet("utf8mb4")
+                    .UseCollation("utf8mb4_general_ci");
+
+                entity.HasIndex(e => e.CourseId, "CourseKey_idx");
+
+                entity.HasIndex(e => e.Sortid, "SortKey_idx");
+
+                entity.Property(e => e.Id)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.CourseId)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("courseId");
+
+                entity.Property(e => e.Sortid)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("SORTID");
+
+                entity.HasOne(d => d.Course)
+                    .WithMany(p => p.Couseofsorts)
+                    .HasForeignKey(d => d.CourseId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("CourseSortKey");
+
+                entity.HasOne(d => d.Sort)
+                    .WithMany(p => p.Couseofsorts)
+                    .HasForeignKey(d => d.Sortid)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("SortKey");
+            });
+
+            modelBuilder.Entity<SortCycle>(entity =>
+            {
+                entity.HasKey(e => e.Sortid)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("sort cycles");
+
+                entity.HasComment("מחזור מיון ")
+                    .HasCharSet("utf8mb4")
+                    .UseCollation("utf8mb4_general_ci");
+
+                entity.HasIndex(e => e.Name, "Name_UNIQUE")
+                    .IsUnique();
+
+                entity.Property(e => e.Sortid)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("SORTID");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(45)
+                    .HasComment("שם מיון ");
             });
 
             OnModelCreatingPartial(modelBuilder);

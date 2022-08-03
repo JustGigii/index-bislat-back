@@ -34,5 +34,8 @@ namespace index_bislatContext
         /// עדיפות שלישית
         /// </summary>
         public int Third { get; set; }
+        public int? Sortid { get; set; }
+
+        public virtual SortCycle? Sort { get; set; }
     }
 }
