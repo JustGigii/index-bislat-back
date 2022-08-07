@@ -32,15 +32,17 @@ namespace Index_Bislat_Back.Repository
             {
                 _context.Coursetables.Add(course);
                 if ( !await Save()) return false;
-                AddBaseToCourse(course, bases);
+                    if (!await AddBaseToCourse(course, bases)) return false;
                 return true;
             }
             catch (Exception ex) { throw ex; };
 
         }
 
-        private async Task AddBaseToCourse(Coursetable course, List<string> bases)
+        private async Task<bool> AddBaseToCourse(Coursetable course, List<string> bases)
         {
+           try
+            { 
             foreach (var iafBase in bases)
             {
                 var idnum = MakePrameter("@ncourseNumber", System.Data.DbType.String, 45, course.CourseNumber);
@@ -48,6 +50,9 @@ namespace Index_Bislat_Back.Repository
                 await _context.Database.ExecuteSqlRawAsync("call Add_base_to_course(@ncourseNumber,@base);", idnum, baseofcourse);
 
             }
+            return true;
+            }
+            catch (Exception e) { Console.WriteLine(e.Message); return false; }
         }
 
         private MySqlParameter MakePrameter(string name, System.Data.DbType type, int size, object? value)
@@ -63,9 +68,13 @@ namespace Index_Bislat_Back.Repository
 
         public async Task<bool> DeleteCourse(Coursetable CourseNumber)
         {
-            await _context.Database.ExecuteSqlRawAsync("delete from baseofcourse where courseId = {0}", CourseNumber.CourseId);
-            _context.Coursetables.Remove(CourseNumber);
-            return await Save();
+            try
+            {
+                await _context.Database.ExecuteSqlRawAsync("delete from baseofcourse where courseId = {0}", CourseNumber.CourseId);
+                _context.Coursetables.Remove(CourseNumber);
+                return await Save();
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message);  return false; }
         }
 
         public async Task<ICollection<Coursetable>> GetAllCourses()
@@ -104,7 +113,7 @@ namespace Index_Bislat_Back.Repository
                 return await DeleteCourse(courseold) && await AddCourse(course, bases);
 
             }
-            catch { return false; }
+            catch (Exception e) { Console.WriteLine(e.Message); return false; }
         }
         public async Task<bool> Save()
         {

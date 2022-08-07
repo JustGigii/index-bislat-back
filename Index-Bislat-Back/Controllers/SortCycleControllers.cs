@@ -60,15 +60,14 @@ namespace Index_Bislat_Back.Controllers
                     return BadRequest(ModelState);
                 return Ok(coures);
             }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error Occurred: {ex}");
-            }
+            catch (Exception err) { Console.WriteLine(err.Message); return BadRequest($"Error Occurred: pls contact to backend team"); }
         }
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<SortCycleDto>))]
         public async Task<IActionResult> GetAllCourses()
         {
+            try
+            { 
             var sort = _mapper.Map<List<SortCycleDto>>(await _sort.GetAllSortCycles());
             //var sort = await _sort.GetAllSortCycles();
             if (!ModelState.IsValid)
@@ -76,7 +75,8 @@ namespace Index_Bislat_Back.Controllers
                 return BadRequest(ModelState);
             }
             return Ok(sort);
-
+            }
+            catch (Exception err) { Console.WriteLine(err.Message); return BadRequest($"Error Occurred: pls contact to backend team"); }
         }
 
         [HttpDelete("{SortName}")]
@@ -99,6 +99,31 @@ namespace Index_Bislat_Back.Controllers
                 return StatusCode(500, ModelState);
             }
             return Ok("succses to delete");
+        }
+        [HttpPut("UpdateSort")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> UpdateSort([FromBody] SortCycleDetailsDto updatedSort)
+        {
+            if (updatedSort == null)
+                return BadRequest(ModelState);
+
+            if (!await _sort.IsExist(updatedSort.Name))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var sortMap = _mapper.Map<SortCycle>(updatedSort);
+            List<string> courses = new List<string>(updatedSort.courses);
+            if (!await _sort.UpdateSort(sortMap, courses))
+            {
+                ModelState.AddModelError("", "Something went wrong updating course");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("succses to Update");
         }
     }
 }

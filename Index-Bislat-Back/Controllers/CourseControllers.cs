@@ -22,6 +22,9 @@ namespace Index_Bislat_Back.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<Coursetable>))]
         public async Task<IActionResult> GetAllCourses()
         {
+            try
+            {
+
             var coures = _mapper.Map<List<CoursesDto>>(await _course.GetAllCourses());
 
             if (!ModelState.IsValid)
@@ -29,8 +32,10 @@ namespace Index_Bislat_Back.Controllers
                 return BadRequest(ModelState);
             }
             return Ok(coures);
+            }
+            catch (Exception err) {Console.WriteLine(err.Message); return BadRequest($"Error Occurred: pls contact to backend team"); }
+            }
 
-        }
         [HttpGet("{CourseNumber}")]
         [ProducesResponseType(200, Type = typeof(CourseDetailsDto))]
         [ProducesResponseType(400)]
@@ -45,10 +50,7 @@ namespace Index_Bislat_Back.Controllers
                     return BadRequest(ModelState);
                 return Ok(coures);
             }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error Occurred: {ex}");
-            }
+            catch (Exception err) { Console.WriteLine(err.Message); return BadRequest($"Error Occurred: pls contact to backend team"); }
         }
         [HttpPost]
         [ProducesResponseType(204)]

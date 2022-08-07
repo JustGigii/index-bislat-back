@@ -13,8 +13,12 @@ namespace Index_Bislat_Back.Repository
         }
         public async Task<bool> AddBase(Aifbase aifbase)
         {
+            try
+            { 
             _context.Add(aifbase);
             return await Save();
+            }
+            catch (Exception e) { Console.WriteLine(e.Message); return false; }
         }
 
         public async Task<ICollection<Aifbase>> GetAllBase()
@@ -24,8 +28,12 @@ namespace Index_Bislat_Back.Repository
 
         public async Task<bool> RemoveBase(Aifbase aifbase)
         {
-            _context.Remove(aifbase);
-            return await Save();
+            try
+            {
+                _context.Remove(aifbase);
+                return await Save();
+            }
+            catch (Exception e) { Console.WriteLine(e.Message); return false; }
         }
 
         public async Task<bool> Save()

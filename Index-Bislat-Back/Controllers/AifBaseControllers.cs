@@ -23,12 +23,16 @@ namespace Index_Bislat_Back.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<AifbaseDto>))]
         public async Task<IActionResult> GetCategories()
         {
+            try
+            { 
             var Bases = _mapper.Map<List<AifbaseDto>>(await _aifBaseRepository.GetAllBase());
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(Bases);
+            }
+            catch (Exception err) { Console.WriteLine(err.Message); return BadRequest($"Error Occurred: pls contact to backend team"); }
         }
 
         [HttpPost("AddBase")]
