@@ -22,6 +22,7 @@ namespace index_bislatContext
 
         public virtual ICollection<Choisetable> Choisetables { get; set; }
         public virtual ICollection<Couseofsort> Couseofsorts { get; set; }
+
         public ICollection<string> StringCourseNum()
         {
             List<string> Courses = new List<string>();

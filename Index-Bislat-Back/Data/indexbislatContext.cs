@@ -93,7 +93,7 @@ namespace index_bislatContext
                     .HasColumnName("CALLID");
 
                 entity.Property(e => e.First)
-                    .HasColumnType("int(11)")
+                    .HasMaxLength(45)
                     .HasColumnName("first")
                     .HasComment("עדיפות ראשונה");
 
@@ -112,7 +112,7 @@ namespace index_bislatContext
                     .HasCharSet("latin1");
 
                 entity.Property(e => e.Second)
-                    .HasColumnType("int(11)")
+                    .HasMaxLength(45)
                     .HasColumnName("second")
                     .HasComment("עדיפות שנייה");
 
@@ -126,16 +126,9 @@ namespace index_bislatContext
                     .HasColumnName("SORTID");
 
                 entity.Property(e => e.Third)
-                    .HasColumnType("int(11)")
+                    .HasMaxLength(45)
                     .HasColumnName("third")
                     .HasComment("עדיפות שלישית");
-
-                entity.Property(e => e.Title)
-                    .HasMaxLength(45)
-                    .HasColumnName("title")
-                    .HasComment("מחזור מיון")
-                    .UseCollation("latin1_swedish_ci")
-                    .HasCharSet("latin1");
 
                 entity.HasOne(d => d.Sort)
                     .WithMany(p => p.Choisetables)

@@ -25,6 +25,9 @@ namespace Index_Bislat_Back.Helper
 
             CreateMap<SortCycle, SortCycleDto>();
             CreateMap<SortCycleDto, SortCycle>();
+
+            CreateMap<Choisetable, ChoisetableDto>();
+            CreateMap<ChoisetableDto, Choisetable>();
         }
     }
 }
