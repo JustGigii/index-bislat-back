@@ -19,6 +19,15 @@ namespace Index_Bislat_Back.Helper
 
             CreateMap<Baseofcourse, BaseofcourseDto>().ForMember(dest => dest.Base, act => act.MapFrom(src => src));
             CreateMap<BaseofcourseDto, Baseofcourse>();
+
+            CreateMap<SortCycle, SortCycleDetailsDto>().ForMember(dest => dest.courses, act => act.MapFrom(src => src.StringCourseNum()));
+            CreateMap<SortCycleDetailsDto, SortCycle>();
+
+            CreateMap<SortCycle, SortCycleDto>();
+            CreateMap<SortCycleDto, SortCycle>();
+
+            CreateMap<Choisetable, ChoisetableDto>();
+            CreateMap<ChoisetableDto, Choisetable>();
         }
     }
 }

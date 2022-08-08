@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace index_bislatContext
+﻿namespace Index_Bislat_Back.Dto
 {
-    public partial class Choisetable
+    public class ChoisetableDto
     {
-        public int Callid { get; set; }
+        /// <summary>
+        /// מחזור מיון
+        /// </summary>
+        public string Title { get; set; } = null!;
         /// <summary>
         /// ת.ז
         /// </summary>
@@ -30,8 +30,6 @@ namespace index_bislatContext
         /// עדיפות שלישית
         /// </summary>
         public string Third { get; set; } = null!;
-        public int? Sortid { get; set; }
 
-        public virtual SortCycle? Sort { get; set; }
     }
 }

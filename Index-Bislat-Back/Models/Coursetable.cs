@@ -8,6 +8,7 @@ namespace index_bislatContext
         public Coursetable()
         {
             Baseofcourses = new HashSet<Baseofcourse>();
+            Couseofsorts = new HashSet<Couseofsort>();
         }
 
         public int CourseId { get; set; }
@@ -21,12 +22,12 @@ namespace index_bislatContext
         public string? Note { get; set; }
 
         public virtual ICollection<Baseofcourse> Baseofcourses { get; set; }
+        public virtual ICollection<Couseofsort> Couseofsorts { get; set; }
         public ICollection<string> stringbase()
         {
             List<string> bases = new List<string>();
             Baseofcourses.ToList().ForEach(item => bases.Add(item.Base.BaseName));
             return bases;
         }
-         
     }
 }

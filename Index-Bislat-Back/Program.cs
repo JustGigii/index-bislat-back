@@ -21,6 +21,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAifBase, AifbaseRepository>();
 builder.Services.AddScoped<ICourse, CourseRepository>();
+builder.Services.AddScoped<ISortCycle, SortCycleRepository>();
+builder.Services.AddScoped<IChoisetable, ChoisetableRepository>();
 builder.Services.AddDbContext<indexbislatContext>(options =>
 {
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),ServerVersion.Parse("5.7.37-log"));
