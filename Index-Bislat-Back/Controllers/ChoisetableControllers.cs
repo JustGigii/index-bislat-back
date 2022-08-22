@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Index_Bislat_Back.Dto;
+using Index_Bislat_Back.Helper;
 using Index_Bislat_Back.Interfaces;
 using index_bislatContext;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Index_Bislat_Back.Controllers
@@ -12,11 +14,13 @@ namespace Index_Bislat_Back.Controllers
     {
         private readonly IChoisetable _IChoisetableRepository;
         private readonly IMapper _mapper;
+        private readonly IClaimService _service;
 
-        public ChoisetableControllers(IChoisetable IChoisetableRepository, IMapper mapper)
+        public ChoisetableControllers(IChoisetable IChoisetableRepository, IMapper mapper, IClaimService service)
         {
             this._IChoisetableRepository = IChoisetableRepository;
             _mapper = mapper;
+            _service = service;
         }
 
         [HttpGet("sort")]
@@ -39,11 +43,13 @@ namespace Index_Bislat_Back.Controllers
             catch (Exception err) { Console.WriteLine(err.Message); return BadRequest($"Error Occurred: pls contact to backend team"); }
         }
 
-        [HttpPost("Addchoise")]
+        [HttpPost("Addchoise"), Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> CreateChoise([FromBody] ChoisetableDto choiseCreate)
         {
+            if (!_service.CheakCorretjwt(_service.GetJson(), Newtonsoft.Json.JsonConvert.SerializeObject(choiseCreate)))
+                return BadRequest("jwt don't mach");
             if (choiseCreate == null)
                 return BadRequest(ModelState);
             int sortid = await _IChoisetableRepository.GetSortId(choiseCreate.Title);
@@ -70,11 +76,13 @@ namespace Index_Bislat_Back.Controllers
 
             return Ok("Successfully created");
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> RemoveChosie(string id,string sort)
         {
+            if (!_service.CheakCorretjwt(_service.GetJson(), Newtonsoft.Json.JsonConvert.SerializeObject(new {id = id, sort = sort })))
+                return BadRequest("jwt don't mach");
             int sortid = await _IChoisetableRepository.GetSortId(sort);
             if (!await _IChoisetableRepository.Isexsit(id,sortid))
                 return NotFound();

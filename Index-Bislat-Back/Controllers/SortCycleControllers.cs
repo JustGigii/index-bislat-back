@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Index_Bislat_Back.Dto;
+using Index_Bislat_Back.Helper;
 using Index_Bislat_Back.Interfaces;
 using index_bislatContext;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Index_Bislat_Back.Controllers
@@ -12,17 +14,21 @@ namespace Index_Bislat_Back.Controllers
     {
         private readonly ISortCycle _sort;
         private readonly IMapper _mapper;
-        public SortCycleControllers(ISortCycle sort, IMapper mapper )
+        private readonly IClaimService _service;
+        public SortCycleControllers(ISortCycle sort, IMapper mapper, IClaimService service)
         {
             this._sort = sort;
             this._mapper = mapper;
+            _service = service;
         }
 
-        [HttpPost]
+        [HttpPost,Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> CreateCourse([FromBody] SortCycleDetailsDto sort)
         {
+            if (!_service.CheakCorretjwt(_service.GetJson(), Newtonsoft.Json.JsonConvert.SerializeObject(sort)))
+                return BadRequest("jwt don't mach");
             if (sort == null)
                 return BadRequest(ModelState);
 
@@ -53,6 +59,7 @@ namespace Index_Bislat_Back.Controllers
         {
             try
             {
+          
                 if (!await _sort.IsExist(sortName))
                     return NotFound();
                 var coures = _mapper.Map<SortCycleDetailsDto>(await _sort.GetSortCycleDetails(sortName));
@@ -79,12 +86,14 @@ namespace Index_Bislat_Back.Controllers
             catch (Exception err) { Console.WriteLine(err.Message); return BadRequest($"Error Occurred: pls contact to backend team"); }
         }
 
-        [HttpDelete("{SortName}")]
+        [HttpDelete("{SortName}"),Authorize]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> DelteCourse(string SortName)
         {
+            if (!_service.CheakCorretjwt(_service.GetJson(), SortName))
+                return BadRequest("jwt don't mach");
             if (!await _sort.IsExist(SortName))
             {
                 ModelState.AddModelError("", "sort not exists");
@@ -100,12 +109,14 @@ namespace Index_Bislat_Back.Controllers
             }
             return Ok("succses to delete");
         }
-        [HttpPut("UpdateSort")]
+        [HttpPut("UpdateSort"), Authorize]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> UpdateSort([FromBody] SortCycleDetailsDto updatedSort)
         {
+            if (!_service.CheakCorretjwt(_service.GetJson(), Newtonsoft.Json.JsonConvert.SerializeObject(updatedSort)))
+                return BadRequest("jwt don't mach");
             if (updatedSort == null)
                 return BadRequest(ModelState);
 

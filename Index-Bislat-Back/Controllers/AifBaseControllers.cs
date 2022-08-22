@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Index_Bislat_Back.Dto;
+using Index_Bislat_Back.Helper;
 using Index_Bislat_Back.Interfaces;
 using index_bislatContext;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Index_Bislat_Back.Controllers
@@ -12,16 +14,17 @@ namespace Index_Bislat_Back.Controllers
     {
         private readonly IAifBase _aifBaseRepository;
         private readonly IMapper _mapper;
-
-        public IafBaseControllers(IAifBase aifBaseRepository, IMapper mapper)
+        private readonly IClaimService _service;
+        public IafBaseControllers(IAifBase aifBaseRepository, IMapper mapper, IClaimService service)
         {
-            this._aifBaseRepository = aifBaseRepository;
+            _aifBaseRepository = aifBaseRepository;
             _mapper = mapper;
+            _service = service;
         }
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<AifbaseDto>))]
-        public async Task<IActionResult> GetCategories()
+        public async Task<IActionResult> GetBase()
         {
             try
             { 
@@ -35,11 +38,13 @@ namespace Index_Bislat_Back.Controllers
             catch (Exception err) { Console.WriteLine(err.Message); return BadRequest($"Error Occurred: pls contact to backend team"); }
         }
 
-        [HttpPost("AddBase")]
+        [HttpPost("AddBase"), Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> CreateBase([FromBody] AifbaseDto baseCreate)
         {
+            if(!_service.CheakCorretjwt(_service.GetJson(), Newtonsoft.Json.JsonConvert.SerializeObject(baseCreate)))
+                return BadRequest("jwt don't mach");
             if (baseCreate == null)
                 return BadRequest(ModelState);
 
@@ -64,11 +69,13 @@ namespace Index_Bislat_Back.Controllers
 
             return Ok("Successfully created");
         }
-        [HttpDelete("{baseName}")]
+        [HttpDelete("{baseName}"),Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> RemoveBase(string baseName )
         {
+            if (!_service.CheakCorretjwt(_service.GetJson(), baseName))
+                return BadRequest("jwt don't mach");
             if (!await _aifBaseRepository.Isexsit(baseName))
                 return NotFound();
             var iafbase = await _aifBaseRepository.GetAifbaseDetails(baseName);
