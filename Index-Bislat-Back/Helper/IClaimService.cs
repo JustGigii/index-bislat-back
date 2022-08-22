@@ -1,8 +1,13 @@
-﻿namespace Index_Bislat_Back.Helper
+﻿using Index_Bislat_Back.Dto;
+
+namespace Index_Bislat_Back.Helper
 {
     public interface IClaimService 
     {
-        string GetJson();
-        string GetJsonNumber();
+        public string GetJson();
+        public string CreateToken(object course);
+        public string CreateToken(string name);
+        public bool CheakCorretjwt(string jwt, string body);
+
     }
 }
