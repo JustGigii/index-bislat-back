@@ -39,8 +39,10 @@ namespace Index_Bislat_Back.Repository
             { 
             var sort = await _context.SortCycles.Where(e => e.Name.Contains(sortName)).FirstOrDefaultAsync();
             foreach (var item in _context.Couseofsorts.Where(p=> p.Sortid == sort.Sortid))
-             _context.Couseofsorts.Remove(item); 
-            if (!await Save())return false;
+             _context.Couseofsorts.Remove(item);
+                foreach (var item in _context.Choisetables.Where(p => p.Sortid == sort.Sortid))
+                    _context.Choisetables.Remove(item);
+                if (!await Save())return false;
             _context.SortCycles.Remove(sort);
             return await Save();
             }
