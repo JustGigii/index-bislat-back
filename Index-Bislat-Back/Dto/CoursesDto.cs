@@ -4,6 +4,6 @@
     {
         public string? CourseNumber { get; set; }
         public string? CourseName { get; set; }
-        public string? Category { get; set; }
+      
     }
 }

@@ -109,7 +109,7 @@ namespace Index_Bislat_Back.Repository
 
                 var courseold =  _context.Coursetables
                     .Where(p => p.CourseNumber.Contains(course.CourseNumber))
-                    .FirstOrDefault();;
+                    .FirstOrDefault();
                 return await DeleteCourse(courseold) && await AddCourse(course, bases);
 
             }

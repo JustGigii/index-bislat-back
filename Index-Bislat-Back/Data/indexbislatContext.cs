@@ -92,6 +92,18 @@ namespace index_bislatContext
                     .HasColumnType("int(11)")
                     .HasColumnName("CALLID");
 
+                entity.Property(e => e.Exmplef)
+                    .HasMaxLength(1000)
+                    .HasColumnName("exmplef");
+
+                entity.Property(e => e.Exmples)
+                    .HasMaxLength(1000)
+                    .HasColumnName("exmples");
+
+                entity.Property(e => e.Exmplet)
+                    .HasMaxLength(1000)
+                    .HasColumnName("exmplet");
+
                 entity.Property(e => e.First)
                     .HasMaxLength(45)
                     .HasColumnName("first")
@@ -100,9 +112,11 @@ namespace index_bislatContext
                 entity.Property(e => e.FullName)
                     .HasMaxLength(45)
                     .HasColumnName("fullName")
-                    .HasComment("שם מלא של החייל")
-                    .UseCollation("latin1_swedish_ci")
-                    .HasCharSet("latin1");
+                    .HasComment("שם מלא של החייל");
+
+                entity.Property(e => e.Gender)
+                    .HasMaxLength(45)
+                    .HasColumnName("gender");
 
                 entity.Property(e => e.Id)
                     .HasMaxLength(45)
@@ -110,6 +124,18 @@ namespace index_bislatContext
                     .HasComment("ת.ז")
                     .UseCollation("latin1_swedish_ci")
                     .HasCharSet("latin1");
+
+                entity.Property(e => e.Resonef)
+                    .HasMaxLength(100)
+                    .HasColumnName("resonef");
+
+                entity.Property(e => e.Resones)
+                    .HasMaxLength(45)
+                    .HasColumnName("resones");
+
+                entity.Property(e => e.Resonet)
+                    .HasMaxLength(45)
+                    .HasColumnName("resonet");
 
                 entity.Property(e => e.Second)
                     .HasMaxLength(45)
@@ -161,6 +187,10 @@ namespace index_bislatContext
                 entity.Property(e => e.CourseNumber).HasMaxLength(45);
 
                 entity.Property(e => e.CourseTime).HasMaxLength(45);
+
+                entity.Property(e => e.Gender)
+                    .HasMaxLength(45)
+                    .HasColumnName("gender");
 
                 entity.Property(e => e.ImgUrl)
                     .HasMaxLength(45)

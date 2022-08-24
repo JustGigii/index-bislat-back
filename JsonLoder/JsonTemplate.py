@@ -16,6 +16,21 @@ def choiseTamplate():
             "third": corsemap[rand[2]]
             }
     return jsonsend
+
+def CourseTamplate():
+    jsonsend =  {
+        "Category": "מערך הכטמ''מ",
+        "CourseNumber": "בדיקה",
+        "Gender": "1",
+        "CourseName": "טכנאי דרג א' קרונות כטמ''מ",
+        "CourseTime": "8 שבועות",
+        "CourseBases": ["בח''א 30", "בח''א 8", "כנף 1"],
+        "CourseDescription": "אחזקת מטוסי ומערכות הכטמ''מ במסגרת דרגי א' ו-ב' ברמת התחזוקה השוטפת שלו בקורסי כטמ''מ נלמדים כל מערכות המטוס",
+        "YouTubeURL": "",
+        "ImgURL": "",
+        "note": "דרג א' הינו מקצוע המוגדר תומך לחימה, מקנה הטבות בשחרור. הקורס לא מתקיים בבח''א 21"
+    }
+    return  jsonsend
 def sortTamplate():
     jsonsend=  {
         "name": "מחזור 2000",
