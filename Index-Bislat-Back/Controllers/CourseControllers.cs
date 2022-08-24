@@ -19,7 +19,7 @@ namespace Index_Bislat_Back.Controllers
         private readonly IMapper _mapper;
         private readonly IClaimService _service;
 
-        public CourseControllers(ICourse Course, IMapper mapper, IConfiguration configuration, IClaimService service)
+        public CourseControllers(ICourse Course, IMapper mapper, IClaimService service)
         {
             _course = Course;
             _mapper = mapper;

@@ -13,6 +13,7 @@ namespace index_bislatContext
 
         public int CourseId { get; set; }
         public string? Category { get; set; }
+        public string? Gender { get; set; }
         public string? CourseNumber { get; set; }
         public string? CourseName { get; set; }
         public string? CourseTime { get; set; }
