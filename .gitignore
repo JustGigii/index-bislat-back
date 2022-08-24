@@ -4,7 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 Index-Bislat-Back/appsettings.json
 
-JsonLoder/config.py
+
 refence/mock-data.json
 # User-specific files
 *.rsuser
@@ -399,3 +399,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+JsonLoder/config.py
