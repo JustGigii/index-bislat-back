@@ -5,15 +5,25 @@ corsemap = []
 fake = Faker()
 
 def choiseTamplate():
+    cursejson = main.openjsonfile("course.json")
+    for i in cursejson:
+        corsemap.append(i["CourseNumber"])
     rand = random.sample(range(1, len(corsemap)), 3)
     jsonsend={
-            "title": "מחזור גיוס",
+            "title": "מחזור 2000",
+            "gender": "1",
             "id": fake.bothify("#########"),
             "fullName": fake.name(),
             "sortFrame": random.randrange(1, 20),
             "first": corsemap[rand[0]],
+            "resonef": "string",
+            "exmplef": "string",
             "second": corsemap[rand[1]],
-            "third": corsemap[rand[2]]
+            "resones": "string",
+            "exmples": "string",
+            "third": corsemap[rand[2]],
+            "resonet": "string",
+            "exmplet": "string"
             }
     return jsonsend
 
@@ -33,13 +43,15 @@ def CourseTamplate():
     return  jsonsend
 def sortTamplate():
     jsonsend=  {
-        "name": "מחזור 2000",
+        "Name": "מחזור 2000",
         "courses": [
             "1400",
             "196",
-            "1807"
+            "1807",
+            "1233"
         ]
     }
+    return jsonsend
     if __name__ == '__main__':
             cursejson = main.openjsonfile("course.json")
             for i in cursejson:

@@ -51,7 +51,7 @@ namespace Index_Bislat_Back.Helper
         {
             if (jwt == null)
                 return false;
-            if (!jwt.Equals(body))
+            if (!jwt.ToUpper().Equals(body.ToUpper()))
                 return false;
             return true;
         }
