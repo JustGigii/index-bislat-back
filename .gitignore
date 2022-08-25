@@ -3,8 +3,8 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 Index-Bislat-Back/appsettings.json
-Index-Bislat-Back/JsonLoder/config.py
-JsonLoder/config.py
+jsonloder/Config.py
+
 refence/mock-data.json
 # User-specific files
 *.rsuser

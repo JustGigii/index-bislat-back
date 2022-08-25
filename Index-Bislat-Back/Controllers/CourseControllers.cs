@@ -58,7 +58,7 @@ namespace Index_Bislat_Back.Controllers
                     return BadRequest(ModelState);
                 return Ok(coures);
             }
-            catch (Exception err) { Console.WriteLine(err.Message); return BadRequest($"Error Occurred: pls contact to backend team"); }
+            catch (Exception err) { Console.WriteLine(err.Message); return BadRequest("Error Occurred: pls contact to backend team"); }
         }
 
         [HttpPost, Authorize]
@@ -71,10 +71,9 @@ namespace Index_Bislat_Back.Controllers
             if (!_service.CheakCorretjwt(_service.GetJson(), Newtonsoft.Json.JsonConvert.SerializeObject(courseCreate)))
                 return BadRequest("jwt don't mach");
                 if (await _course.IsExist(courseCreate.CourseNumber))
-            {
-                ModelState.AddModelError("", "course already exists");
-                return StatusCode(422, ModelState);
-            }
+                {
+                return BadRequest("course already exists");
+                }
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -83,8 +82,7 @@ namespace Index_Bislat_Back.Controllers
             List<string> bases = new List<string>(courseCreate.CourseBases);
             if (! await _course.AddCourse(courseMap, bases))
             {
-                ModelState.AddModelError("", "Something went wrong while saving");
-                return StatusCode(500, ModelState);
+                return BadRequest("Something went wrong while saving");
             }
 
             return Ok("Successfully created");
@@ -99,16 +97,14 @@ namespace Index_Bislat_Back.Controllers
                 return BadRequest("jwt don't mach");
             if (!await _course.IsExist(CourseNumber))
             {
-                ModelState.AddModelError("", "course not exists");
-                return StatusCode(422, ModelState);
+                return BadRequest("course not exists");
             }
             var course =await _course.GetCourseById(CourseNumber);
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             if(!await _course.DeleteCourse(course))
             {
-                ModelState.AddModelError("", "Something went wrong while delete");
-                return StatusCode(500, ModelState);
+                return BadRequest("Something went wrong while delete");
             }
             return Ok("succses to delete");
         }
@@ -133,8 +129,7 @@ namespace Index_Bislat_Back.Controllers
             List<string> bases = new List<string>(updatedCourse.CourseBases);
             if (!await _course.UpdateCourse(courseMap,bases))
             {
-                ModelState.AddModelError("", "Something went wrong updating course");
-                return StatusCode(500, ModelState);
+                return BadRequest("Something went wrong updating course");
             }
 
             return Ok("succses to Update");
