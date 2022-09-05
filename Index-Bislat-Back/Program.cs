@@ -15,6 +15,10 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
+using Microsoft.Identity.Web;
+using Microsoft.AspNetCore.Authentication;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,18 +43,20 @@ builder.Services.AddSwaggerGen(options =>
 
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
-            ValidateIssuer = false,
-            ValidateAudience = false
-        };
-    });
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(options =>
+//    {
+//        options.TokenValidationParameters = new TokenValidationParameters
+//        {
+//            ValidateIssuerSigningKey = true,
+//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+//                .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+//            ValidateIssuer = false,
+//            ValidateAudience = false
+//        };
+//    });
+builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration);
+builder.Services.AddAuthorization();
 builder.Services.AddScoped<IAifBase, AifbaseRepository>();
 builder.Services.AddScoped<ICourse, CourseRepository>();
 builder.Services.AddScoped<ISortCycle, SortCycleRepository>();
@@ -81,4 +87,15 @@ app.UseAuthorization();
 
 app.MapControllers();
 
- app.Run();
+app.Run();
+
+//https://login.microsoftonline.com/78820852-55fa-450b-908d-45c0d911e76b/oauth2/authorize?
+//client_id = 50529936 - c556 - 4c69 - b289 - a58908c055b1
+//& response_type = token
+//& redirect_uri = https://localhost:7041/swagger/index.html
+//&resource = 50529936 - c556 - 4c69 - b289 - a58908c055b1
+//& response_mode = fragment
+//& state = 12345
+//& nonce = 678910
+//https://login.microsoftonline.com/78820852-55fa-450b-908d-45c0d911e76b/oauth2/authorize?%20client_id=c3c0b0b6-5cd3-4a08-b337-5d032621e9091&response_type=token%20&redirect_uri=https://localhost:7041/swagger/index.html%20&resource=c3c0b0b6-5cd3-4a08-b337-5d032621e909&response_mode=fragment%20&state=12345%20&nonce=678910
+//https://localhost:7041/swagger/index.html
