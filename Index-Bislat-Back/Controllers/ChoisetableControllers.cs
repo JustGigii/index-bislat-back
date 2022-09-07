@@ -9,21 +9,19 @@ using Microsoft.AspNetCore.Mvc;
 namespace Index_Bislat_Back.Controllers
 {
     [Route("Choise")]
-    [ApiController]
+    [ApiController, Authorize]
     public class ChoisetableControllers : Controller
     {
         private readonly IChoisetable _IChoisetableRepository;
         private readonly IMapper _mapper;
-        private readonly IClaimService _service;
 
-        public ChoisetableControllers(IChoisetable IChoisetableRepository, IMapper mapper, IClaimService service)
+        public ChoisetableControllers(IChoisetable IChoisetableRepository, IMapper mapper)
         {
             this._IChoisetableRepository = IChoisetableRepository;
             _mapper = mapper;
-            _service = service;
         }
 
-        [HttpGet("sort")]
+        [HttpGet("sort"),AllowAnonymous]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ChoisetableDto>))]
         public async Task<IActionResult> GetCategories(string sort)
         {
@@ -43,25 +41,21 @@ namespace Index_Bislat_Back.Controllers
             catch (Exception err) { Console.WriteLine(err.Message); return BadRequest($"Error Occurred: pls contact to backend team"); }
         }
 
-        [HttpPost("Addchoise"), Authorize]
+        [HttpPost("Addchoise")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> CreateChoise([FromBody] ChoisetableDto choiseCreate)
         {
-            if (!_service.CheakCorretjwt(_service.GetJson(), Newtonsoft.Json.JsonConvert.SerializeObject(choiseCreate)))
-                return BadRequest("jwt don't mach");
             if (choiseCreate == null)
                 return BadRequest(ModelState);
             int sortid = await _IChoisetableRepository.GetSortId(choiseCreate.Title);
             if (sortid == -1)
             {
-                ModelState.AddModelError("", "sort not exists");
-                return StatusCode(422, ModelState);
+                return BadRequest("sort not exists");
             }
             if (await _IChoisetableRepository.Isexsit(choiseCreate.Id, sortid))
             {
-                ModelState.AddModelError("", "choise already exists");
-                return StatusCode(422, ModelState);
+                return BadRequest("choise already exists");
             }
 
             if (!ModelState.IsValid)
@@ -70,19 +64,16 @@ namespace Index_Bislat_Back.Controllers
             choiseMap.Sortid = sortid;
             if (!await _IChoisetableRepository.AddChoise(choiseMap))
             {
-                ModelState.AddModelError("", "Something went wrong while saving");
-                return StatusCode(500, ModelState);
+                return BadRequest("Something went wrong while saving");
             }
 
             return Ok("Successfully created");
         }
-        [HttpDelete("{id}"), Authorize]
+        [HttpDelete("{id}"),Authorize(Roles = "Mannger")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> RemoveChosie(string id,string sort)
         {
-            if (!_service.CheakCorretjwt(_service.GetJson(), Newtonsoft.Json.JsonConvert.SerializeObject(new {id = id, sort = sort })))
-                return BadRequest("jwt don't mach");
             int sortid = await _IChoisetableRepository.GetSortId(sort);
             if (!await _IChoisetableRepository.Isexsit(id,sortid))
                 return NotFound();
@@ -91,8 +82,7 @@ namespace Index_Bislat_Back.Controllers
                 return BadRequest(ModelState);
             if (!await _IChoisetableRepository.Removechoise(chosie))
             {
-                ModelState.AddModelError("", "Something went wrong deleting Base");
-                return StatusCode(500, ModelState);
+                return BadRequest("Something went wrong deleting Base");
             }
             return Ok("succses to delete");
         }

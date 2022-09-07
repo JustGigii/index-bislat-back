@@ -1,8 +1,10 @@
-﻿namespace Index_Bislat_Back.Dto
+﻿using index_bislatContext;
+
+namespace Index_Bislat_Back.Dto
 {
     public class SortCycleDetailsDto
     {
         public string Name { get; set; }
-        public string[] courses { get; set; }
+        public CoursesDto[] courses { get; set; }
     }
 }

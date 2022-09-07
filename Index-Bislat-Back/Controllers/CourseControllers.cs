@@ -12,21 +12,20 @@ using System.Security.Claims;
 namespace Index_Bislat_Back.Controllers
 {
     [Route("Course")]
-    [ApiController]
+    [ApiController, Authorize(Roles = "Mannger")]
     public class CourseControllers : Controller
     {
         private readonly ICourse _course;
         private readonly IMapper _mapper;
-        private readonly IClaimService _service;
 
-        public CourseControllers(ICourse Course, IMapper mapper, IClaimService service)
+
+        public CourseControllers(ICourse Course, IMapper mapper)
         {
             _course = Course;
             _mapper = mapper;
-            _service = service;
         }
 
-        [HttpGet]
+        [HttpGet,AllowAnonymous]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Coursetable>))]
         public async Task<IActionResult> GetAllCourses()
         {
@@ -44,7 +43,7 @@ namespace Index_Bislat_Back.Controllers
             catch (Exception err) {Console.WriteLine(err.Message); return BadRequest($"Error Occurred: pls contact to backend team"); }
             }
 
-        [HttpGet("{CourseNumber}")]
+        [HttpGet("{CourseNumber}"),AllowAnonymous]
         [ProducesResponseType(200, Type = typeof(CourseDetailsDto))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetCourseById(string CourseNumber)
@@ -61,15 +60,13 @@ namespace Index_Bislat_Back.Controllers
             catch (Exception err) { Console.WriteLine(err.Message); return BadRequest("Error Occurred: pls contact to backend team"); }
         }
 
-        [HttpPost, Authorize]
+        [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> CreateCourse([FromBody] CourseDetailsDto courseCreate)
         {
             if (courseCreate == null)
                 return BadRequest(ModelState);
-            if (!_service.CheakCorretjwt(_service.GetJson(), Newtonsoft.Json.JsonConvert.SerializeObject(courseCreate)))
-                return BadRequest("jwt don't mach");
                 if (await _course.IsExist(courseCreate.CourseNumber))
                 {
                 return BadRequest("course already exists");
@@ -87,14 +84,12 @@ namespace Index_Bislat_Back.Controllers
 
             return Ok("Successfully created");
         }
-        [HttpDelete("{CourseNumber}"),Authorize]
+        [HttpDelete("{CourseNumber}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteCourse(string CourseNumber)
         {
-            if (!_service.CheakCorretjwt(_service.GetJson(), CourseNumber))
-                return BadRequest("jwt don't mach");
             if (!await _course.IsExist(CourseNumber))
             {
                 return BadRequest("course not exists");
@@ -109,7 +104,7 @@ namespace Index_Bislat_Back.Controllers
             return Ok("succses to delete");
         }
 
-        [HttpPut("UpdateCourse"),Authorize]
+        [HttpPut("UpdateCourse")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
@@ -117,8 +112,7 @@ namespace Index_Bislat_Back.Controllers
         {
             if (updatedCourse == null)
                 return BadRequest(ModelState);
-            if (!_service.CheakCorretjwt(_service.GetJson(), Newtonsoft.Json.JsonConvert.SerializeObject(updatedCourse)))
-                return BadRequest("jwt don't mach");
+
             if (!await _course.IsExist(updatedCourse.CourseNumber))
                 return NotFound();
 

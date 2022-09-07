@@ -1,13 +1,3 @@
-https://login.microsoftonline.com/78820852-55fa-450b-908d-45c0d911e76b/oauth2/v2.0/authorize?
-client_id=9c1dec1a-955f-4ccb-ab8c-16359fa6fc5a
-&response_type=token
-&redirect_uri=https://localhost:7041/swagger/index.html
-&resource=9c1dec1a-955f-4ccb-ab8c-16359fa6fc5a
-&response_mode=fragment
-&state=12345
-&nonce=678910
-
-https://login.microsoftonline.com/78820852-55fa-450b-908d-45c0d911e76b/oauth2/v2.0/authorize?client_id=9c1dec1a-955f-4ccb-ab8c-16359fa6fc5a&response_type=token&redirect_uri=https://localhost:7041/swagger/index.html&resource=9c1dec1a-955f-4ccb-ab8c-16359fa6fc5a&response_mode=fragment&state=12345&nonce=678910
 
 https://login.microsoftonline.com/common/oauth2/v2.0/authorize?
 response_type=token
@@ -15,5 +5,4 @@ response_type=token
 &scope=api%3A%2F%2F4e3fe790-6226-4152-8ca8-e1c01bd31a6c%2Faccess_as_user
 &redirect_uri=https://localhost:7041/swagger/index.html
 
-https://login.microsoftonline.com/common/oauth2/v2.0/authorize?response_type=token&client_id=e4d6f6f5-4cad-44b4-a9ff-3db1b564edc4&scope=api%3A%2F%2F4e3fe790-6226-4152-8ca8-e1c01bd31a6c%2Faccess_as_user&redirect_uri=https://localhost:7041/swagger/index.html
 

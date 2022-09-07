@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Index_Bislat_Back.Controllers
 {
     [Route("Iafbase")]
-    [ApiController]
+    [ApiController,Authorize(Roles = "Mannger")]
     public class IafBaseControllers : Controller
     {
         private readonly IAifBase _aifBaseRepository;
@@ -22,7 +22,7 @@ namespace Index_Bislat_Back.Controllers
             _service = service;
         }
 
-        [HttpGet]
+        [HttpGet,AllowAnonymous]
         [ProducesResponseType(200, Type = typeof(IEnumerable<AifbaseDto>))]
         public async Task<IActionResult> GetBase()
         {
@@ -38,13 +38,11 @@ namespace Index_Bislat_Back.Controllers
             catch (Exception err) { Console.WriteLine(err.Message); return BadRequest($"Error Occurred: pls contact to backend team"); }
         }
 
-        [HttpPost("AddBase"), Authorize]
+        [HttpPost("AddBase")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> CreateBase([FromBody] AifbaseDto baseCreate)
         {
-            if(!_service.CheakCorretjwt(_service.GetJson(), Newtonsoft.Json.JsonConvert.SerializeObject(baseCreate)))
-                return BadRequest("jwt don't mach");
             if (baseCreate == null)
                 return BadRequest(ModelState);
 
@@ -52,8 +50,7 @@ namespace Index_Bislat_Back.Controllers
             var IafBase = bases.Where(c => c.BaseName.Contains(baseCreate.BaseName)).FirstOrDefault();
             if (IafBase != null)
             {
-                ModelState.AddModelError("", "Base already exists");
-                return StatusCode(422, ModelState);
+                return BadRequest("Base already exists");
             }
 
             if (!ModelState.IsValid)
@@ -63,19 +60,17 @@ namespace Index_Bislat_Back.Controllers
 
             if (!await _aifBaseRepository.AddBase(BaseMap))
             {
-                ModelState.AddModelError("", "Something went wrong while saving");
-                return StatusCode(500, ModelState);
+                return BadRequest("Something went wrong while saving");
             }
 
             return Ok("Successfully created");
         }
-        [HttpDelete("{baseName}"),Authorize]
+        [HttpDelete("{baseName}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> RemoveBase(string baseName )
         {
-            if (!_service.CheakCorretjwt(_service.GetJson(), baseName))
-                return BadRequest("jwt don't mach");
+
             if (!await _aifBaseRepository.Isexsit(baseName))
                 return NotFound();
             var iafbase = await _aifBaseRepository.GetAifbaseDetails(baseName);
@@ -83,8 +78,7 @@ namespace Index_Bislat_Back.Controllers
                 return BadRequest(ModelState);
             if (!await _aifBaseRepository.RemoveBase(iafbase))
             {
-                ModelState.AddModelError("", "Something went wrong deleting Base");
-                return StatusCode(500, ModelState);
+                return BadRequest("Something went wrong deleting Base");
             }
             return Ok("succses to delete");
         }

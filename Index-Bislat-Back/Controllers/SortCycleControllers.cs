@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Index_Bislat_Back.Controllers
 {
     [Route("Sort")]
-    [ApiController]
+    [ApiController, Authorize(Roles = "Mannger")]
     public class SortCycleControllers : Controller
     {
         private readonly ISortCycle _sort;
@@ -22,37 +22,39 @@ namespace Index_Bislat_Back.Controllers
             _service = service;
         }
 
-        [HttpPost,Authorize]
+        [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> CreateCourse([FromBody] SortCycleDetailsDto sort)
+        public async Task<IActionResult> CreateCourse([FromBody] SortCycleDetailsStringDto sort)
         {
-            if (!_service.CheakCorretjwt(_service.GetJson(), Newtonsoft.Json.JsonConvert.SerializeObject(sort)))
-                return BadRequest("jwt don't mach");
             if (sort == null)
                 return BadRequest(ModelState);
 
             if (await _sort.IsExist(sort.Name))
             {
-                ModelState.AddModelError("", "sort already exists");
-                return StatusCode(422, ModelState);
+                return BadRequest("sort already exists");
             }
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var sortmap = _mapper.Map<SortCycle>(sort);
-            if (!await _sort.AddSortCycle(sortmap, sort.courses.ToList()))
+            if (!await _sort.AddSortCycle(sortmap, sort.courses))
             {
-                ModelState.AddModelError("", "Something went wrong while saving");
-                return StatusCode(500, ModelState);
+                return BadRequest("Something went wrong while saving");
             }
 
             return Ok("Successfully created");
         }
 
+        private static List<string> ConvertToString(SortCycleDetailsDto sort)
+        {
+            List<string> Courses = new List<string>();
+            sort.courses.ToList().ForEach(item => Courses.Add(item.CourseNumber));
+            return Courses;
+        }
 
-        [HttpGet("{sortName}")]
+        [HttpGet("{sortName}"),AllowAnonymous]
         [ProducesResponseType(200, Type = typeof(CourseDetailsDto))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetCourseById(string sortName)
@@ -69,7 +71,7 @@ namespace Index_Bislat_Back.Controllers
             }
             catch (Exception err) { Console.WriteLine(err.Message); return BadRequest($"Error Occurred: pls contact to backend team"); }
         }
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         [ProducesResponseType(200, Type = typeof(IEnumerable<SortCycleDto>))]
         public async Task<IActionResult> GetAllCourses()
         {
@@ -86,37 +88,31 @@ namespace Index_Bislat_Back.Controllers
             catch (Exception err) { Console.WriteLine(err.Message); return BadRequest($"Error Occurred: pls contact to backend team"); }
         }
 
-        [HttpDelete("{SortName}"),Authorize]
+        [HttpDelete("{SortName}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> DelteCourse(string SortName)
         {
-            if (!_service.CheakCorretjwt(_service.GetJson(), SortName))
-                return BadRequest("jwt don't mach");
             if (!await _sort.IsExist(SortName))
             {
-                ModelState.AddModelError("", "sort not exists");
-                return StatusCode(422, ModelState);
+                return BadRequest("sort not existsh");
             }
             var sort =await _sort.GetSortCycleDetails(SortName);
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             if (!await _sort.DeleteSort(sort.Name))
             {
-                ModelState.AddModelError("", "Something went wrong while delete");
-                return StatusCode(500, ModelState);
+                return BadRequest("Something went wrong while delete");
             }
             return Ok("succses to delete");
         }
-        [HttpPut("UpdateSort"), Authorize]
+        [HttpPut("UpdateSort")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> UpdateSort([FromBody] SortCycleDetailsDto updatedSort)
+        public async Task<IActionResult> UpdateSort([FromBody] SortCycleDetailsStringDto updatedSort)
         {
-            if (!_service.CheakCorretjwt(_service.GetJson(), Newtonsoft.Json.JsonConvert.SerializeObject(updatedSort)))
-                return BadRequest("jwt don't mach");
             if (updatedSort == null)
                 return BadRequest(ModelState);
 
@@ -127,11 +123,9 @@ namespace Index_Bislat_Back.Controllers
                 return BadRequest();
 
             var sortMap = _mapper.Map<SortCycle>(updatedSort);
-            List<string> courses = new List<string>(updatedSort.courses);
-            if (!await _sort.UpdateSort(sortMap, courses))
+            if (!await _sort.UpdateSort(sortMap, updatedSort.courses))
             {
-                ModelState.AddModelError("", "Something went wrong updating course");
-                return StatusCode(500, ModelState);
+                return BadRequest("Something went wrong updating course");
             }
 
             return Ok("succses to Update");
