@@ -91,19 +91,7 @@ namespace index_bislatContext
                 entity.Property(e => e.Callid)
                     .HasColumnType("int(11)")
                     .HasColumnName("CALLID");
-
-                entity.Property(e => e.Exmplef)
-                    .HasMaxLength(1000)
-                    .HasColumnName("exmplef");
-
-                entity.Property(e => e.Exmples)
-                    .HasMaxLength(1000)
-                    .HasColumnName("exmples");
-
-                entity.Property(e => e.Exmplet)
-                    .HasMaxLength(1000)
-                    .HasColumnName("exmplet");
-
+                    
                 entity.Property(e => e.First)
                     .HasMaxLength(45)
                     .HasColumnName("first")

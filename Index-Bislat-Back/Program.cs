@@ -78,7 +78,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseSwagger();
+app.UseCors(x => x
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),  
+// specifying the Swagger JSON endpoint.  
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Index Bislat Back API");
+    c.RoutePrefix = string.Empty;
+});
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

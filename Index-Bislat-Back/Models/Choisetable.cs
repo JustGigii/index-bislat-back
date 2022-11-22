@@ -24,19 +24,16 @@ namespace index_bislatContext
         /// </summary>
         public string First { get; set; } = null!;
         public string? Resonef { get; set; }
-        public string? Exmplef { get; set; }
         /// <summary>
         /// עדיפות שנייה
         /// </summary>
         public string Second { get; set; } = null!;
         public string? Resones { get; set; }
-        public string? Exmples { get; set; }
         /// <summary>
         /// עדיפות שלישית
         /// </summary>
         public string Third { get; set; } = null!;
         public string? Resonet { get; set; }
-        public string? Exmplet { get; set; }
         public int? Sortid { get; set; }
 
         public virtual SortCycle? Sort { get; set; }
