@@ -45,11 +45,19 @@ namespace Index_Bislat_Back.Repository
             { 
             foreach (var iafBase in bases)
             {
-                var idnum = MakePrameter("@ncourseNumber", System.Data.DbType.String, 45, course.CourseNumber);
-                var baseofcourse = MakePrameter("@base", System.Data.DbType.String, 45, iafBase); 
-                await _context.Database.ExecuteSqlRawAsync("call Add_base_to_course(@ncourseNumber,@base);", idnum, baseofcourse);
-
-            }
+                //var idnum = MakePrameter("@ncourseNumber", System.Data.DbType.String, 45, course.CourseNumber);
+                //var baseofcourse = MakePrameter("@base", System.Data.DbType.String, 45, iafBase); 
+                //await _context.Database.ExecuteSqlRawAsync("call Add_base_to_course(@ncourseNumber,@base);", idnum, baseofcourse);
+                var baseid =await _context.Aifbases.Where(e => e.BaseName == iafBase).FirstOrDefaultAsync();
+                    if (baseid == null)
+                    {
+                        baseid = new Aifbase() { BaseName = iafBase };
+                        await _context.Aifbases.AddAsync(baseid);
+                        if (!await Save())return false;
+                    }
+                    _context.Baseofcourses.Add(new Baseofcourse() { CourseId = course.CourseId, Baseid = baseid.Id });
+                    if (!await Save()) return false;
+                }
             return true;
             }
             catch (Exception e) { Console.WriteLine(e.Message); return false; }

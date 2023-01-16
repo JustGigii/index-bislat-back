@@ -21,7 +21,7 @@ namespace index_bislatContext
         /// שם מיון 
         /// </summary>
         public string Name { get; set; } = null!;
-
+        public int Status { get; set; }
         public virtual ICollection<Choisetable> Choisetables { get; set; }
         public virtual ICollection<Couseofsort> Couseofsorts { get; set; }
 

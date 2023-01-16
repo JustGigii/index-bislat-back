@@ -13,6 +13,7 @@ namespace Index_Bislat_Back.Controllers
 {
     [Route("Course")]
     [ApiController, Authorize(Roles = "Mannger")]
+    //[ApiController]
     public class CourseControllers : Controller
     {
         private readonly ICourse _course;
@@ -69,7 +70,7 @@ namespace Index_Bislat_Back.Controllers
                 return BadRequest(ModelState);
                 if (await _course.IsExist(courseCreate.CourseNumber))
                 {
-                return BadRequest("course already exists");
+                    return BadRequest("course already exists");
                 }
 
             if (!ModelState.IsValid)

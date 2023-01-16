@@ -1,8 +1,10 @@
 from faker import Faker
 import random
+from faker import Factory as FakerFactory
 import main
 corsemap = []
 fake = Faker()
+faker = FakerFactory.create()
 
 def choiseTamplate():
     cursejson = main.openjsonfile("course.json")
@@ -10,20 +12,17 @@ def choiseTamplate():
         corsemap.append(i["CourseNumber"])
     rand = random.sample(range(1, len(corsemap)), 3)
     jsonsend={
-            "title": "מחזור 2000",
+            "title": "מחזור גיוס",
             "gender": "1",
-            "id": fake.bothify("#########"),
             "fullName": fake.name(),
+            "id": fake.bothify("#########"),
             "sortFrame": random.randrange(1, 20),
             "first": corsemap[rand[0]],
-            "resonef": "string",
-            "exmplef": "string",
+            "resonef": "אני לא רוצה להיות פהיותר",
             "second": corsemap[rand[1]],
-            "resones": "string",
-            "exmples": "string",
+            "resones":"בא לי ללכת הביתה",
             "third": corsemap[rand[2]],
-            "resonet": "string",
-            "exmplet": "string"
+            "resonet":"בא לי ללכת הביתה",
             }
     return jsonsend
 

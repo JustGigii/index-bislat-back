@@ -10,6 +10,7 @@ namespace Index_Bislat_Back.Controllers
 {
     [Route("Sort")]
     [ApiController, Authorize(Roles = "Mannger")]
+    //[ApiController]
     public class SortCycleControllers : Controller
     {
         private readonly ISortCycle _sort;

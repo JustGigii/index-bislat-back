@@ -63,11 +63,11 @@ def putjwttoken(paylod, url):
 
 
 def SendThreadetJson():
-    url = 'https://localhost:7041/Choise/Addchoise'
+    url = 'https://localhost:7041/Course'
     for i in range(5):
-        json = CreateJson()
-        x = requests.put(url, json=json, verify=False)
-        print(x)
+        json = Addcourse()
+        #x = requests.post(url, json=json, verify=False)
+        #print(x)
 
 
 def Addcourse():
@@ -100,14 +100,21 @@ def Deletesort(url,sort,id):
     x = requests.delete(url, verify=False, headers=head)
     print(x)
 def Main():
-
-    # for i in range(20):
+    url = "https://localhost:7041/Course"
+    json = openjsonfile("mock-data.json")
+    for i in json["data"]:
+        x = requests.post(url, json=i, verify=False)
+        if (x.status_code == 402):
+            print(x.json()['']["errors"])
+        else:
+            x.status_code
+    # for i in range(5):
     #     thread = Thread(target=SendThreadetJson)
     #     thread.start()
     #print(postjwttoken(JsonTemplate.choiseTamplate(), "https://localhost:7041/Choise/Addchoise"))
-    #print(putjwttoken(JsonTemplate.sortTamplate(), "https://localhost:7041/Sort/UpdateSort"))
-    Delete("https://localhost:7041/Sort/","מחזור 2000")
-    #Deletesort("https://localhost:7041/Choise/{0}?sort={1}".format("581795411","מחזור 2000"),"מחזור 2000","581795411")
+    # print(putjwttoken(JsonTemplate.sortTamplate(), "https://localhost:7041/Sort/UpdateSort"))
+    # Delete("https://localhost:7041/Sort/","מחזור 2000")
+    # Deletesort("https://localhost:7041/Choise/{0}?sort={1}".format("581795411","מחזור 2000"),"מחזור 2000","581795411")
     print("done")
 
 
